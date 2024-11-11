@@ -138,21 +138,22 @@ export class GithubService {
   
 
   // Fetch trending projects
-  async fetchTopTrendingProjects() {
-    try {
-      const response = await this.api.get('/search/repositories', {
-        params: {
-          q: 'stars:>10000 license:mit',
-          sort: 'stars',
-        },
-      });
-      return response.data.items;
-      
-    } catch (error) {
-      console.error('Error fetching trending projects:', error);
-      return [];
-    }
+async fetchTopTrendingProjects() {
+  try {
+    const response = await this.api.get('/search/repositories', {
+      params: {
+        q: 'stars:>10000 license:mit',
+        sort: 'stars',
+      },
+    });
+    console.log('API response:', response); // Add this line to inspect the response
+    return response.data.items || []; // Ensure it falls back to an empty array if items is undefined
+  } catch (error) {
+    console.error('Error fetching trending projects:', error);
+    return [];
   }
+}
+
 
   // Fetch all projects
   async fetchAllProjects(page = 1) {
