@@ -24,21 +24,42 @@ export class GithubService {
   // });
   
 
-  // Fetch trending projects
-  async fetchTopTrendingProjects() {
-    try {
-      const response = await this.api.get('/search/repositories', {
-        params: {
-          q: 'stars:>10000 license:mit',
-          sort: 'stars',
-        },
-      });
-      return response.data.items;
-    } catch (error) {
-      console.error('Error fetching trending projects:', error);
-      return [];
-    }
-  }
+  // // Fetch trending projects
+  // async fetchTopTrendingProjects() {
+  //   try {
+  //     const response = await this.api.get('/search/repositories', {
+  //       params: {
+  //         q: 'stars:>10000 license:mit',
+  //         sort: 'stars',
+  //       },
+  //     });
+  //     return response.data.items;
+  //   } catch (error) {
+  //     console.error('Error fetching trending projects:', error);
+  //     return [];
+  //   }
+  // }
+
+  viewTrending() {
+    return K(this, null, function*() {
+        try {
+            this.loading = true;
+            let t = yield this.githubService.fetchTopTrendingProjects();
+
+            if (t) { // Check if t is defined
+                this.trendingProjects = t.slice(0, 6);
+            } else {
+                console.error("Error loading trending projects: No data returned.");
+                this.trendingProjects = []; // Or display an error message
+            }
+        } catch (t) {
+            console.error("Error loading trending projects:", t);
+            this.trendingProjects = []; // Or display an error message
+        } finally {
+            this.loading = false;
+        }
+    });
+}
 
   // Fetch all projects
   async fetchAllProjects(page = 1) {
