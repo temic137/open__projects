@@ -30,17 +30,26 @@ export class HomeComponent {
 
   constructor(private githubService: GithubService) {}
 
-  async viewTrending() {
-    try {
-      this.loading = true;
-      const projects = await this.githubService.fetchTopTrendingProjects();
-      this.trendingProjects = projects.slice(0, 6);
-    } catch (error) {
-      console.error('Error loading trending projects:', error);
-    } finally {
-      this.loading = false;
-    }
-  }
+  viewTrending() {
+    return K(this, null, function*() {
+        try {
+            this.loading = true;
+            let t = yield this.githubService.fetchTopTrendingProjects();
+
+            if (t) { // Check if t is defined
+                this.trendingProjects = t.slice(0, 6);
+            } else {
+                console.error("Error loading trending projects: No data returned.");
+                this.trendingProjects = []; // Or display an error message
+            }
+        } catch (t) {
+            console.error("Error loading trending projects:", t);
+            this.trendingProjects = []; // Or display an error message
+        } finally {
+            this.loading = false;
+        }
+    });
+}
 
   openGitHub(name: string) {
     const project = this.trendingProjects.find(p => p.name === name);
