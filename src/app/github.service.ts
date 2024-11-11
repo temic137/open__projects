@@ -34,6 +34,7 @@ export class GithubService {
         },
       });
       return response.data.items;
+      console.log(loaded trending projects);
     } catch (error) {
       console.error('Error fetching trending projects:', error);
       return [];
