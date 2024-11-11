@@ -24,22 +24,23 @@ export class GithubService {
   // });
   
 
-  // // Fetch trending projects
-  async fetchTopTrendingProjects() {
-    try {
-      const response = await this.api.get('/search/repositories', {
-        params: {
-          q: 'stars:>10000 license:mit',
-          sort: 'stars',
-        },
-      });
-      return response.data.items;
-      console.log("loaded trending projects");
-    } catch (error) {
-      console.error('Error fetching trending projects:', error);
-      return [];
-    }
+ async fetchTopTrendingProjects() {
+  try {
+    const response = await this.api.get('/search/repositories', {
+      params: {
+        q: 'stars:>10000 license:mit',
+        sort: 'stars',
+      },
+    });
+
+    console.log('GitHub response:', response.data); // Log the full response to check the structure
+    return response.data.items || []; // Ensure that you return an empty array if items is undefined
+  } catch (error) {
+    console.error('Error fetching trending projects:', error);
+    return [];
   }
+}
+
 
  
 
